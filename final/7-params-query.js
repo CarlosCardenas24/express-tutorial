@@ -1,9 +1,18 @@
 const express = require('express')
 const app = express()
 const {products} = require('./data')
+const {schedule} = require('./data')
 
 app.get('/', (req, res) => {
-    res.send('<h1>Home page</h1> <a href="/api/products">products</a>')
+    res.send('<h1>Home page</h1> <a href="/api/products">products</a> <a href="/schedule">schedule</a>')
+})
+
+app.get('/schedule', (req, res) => {
+    const newSchedule = schedule.map((scheduled) => {
+        let {day, morning, afternoon, evening} = scheduled
+        return {day, morning, afternoon, evening}
+    })
+    res.json(newSchedule)
 })
 
 app.get('/api/products', (req, res) => {
@@ -14,6 +23,19 @@ app.get('/api/products', (req, res) => {
 
     res.json(newProducts)
 })
+
+app.get('/schedule/:scheduledDay', (req, res) => {
+    console.log(req)
+    console.log(req.params)
+    const {scheduledDay} = req.params
+    const singleDay = schedule.find((scheduled) => scheduled.day === scheduledDay)
+
+    if(!singleDay){
+        return res.status(404).send('Schedule On That Day Does Not Exist (Capatolize the Day)')
+    }
+
+    res.json(singleDay)
+}) 
 
 app.get('/api/proudcts/:productID', (req, res) => {
     /* console.log(req)
@@ -30,6 +52,7 @@ app.get('/api/proudcts/:productID', (req, res) => {
 
     return res.json(singleProduct)
 })
+
 
 app.get('/api/products/:productID/reviews/:reviewID', (req, res) => {
     console.log(req.params)

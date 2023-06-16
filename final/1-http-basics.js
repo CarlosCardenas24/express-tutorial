@@ -15,6 +15,11 @@ const server = http.createServer((req, res) => {
     res.write('<h1>about page</h1>')
     res.end()
   }
+  else if (url === '/schedule') {
+    res.writeHead(200, { 'content-type': 'txt/html'})
+    res.write('<h1>Schedule page</h1>')
+    res.end()
+  }
   // 404
   else {
     res.writeHead(404, { 'content-type': 'text/html' })
